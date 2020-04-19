@@ -11,6 +11,7 @@ def mandelbrot_set(xmin, xmax, ymin, ymax, xn, yn, maxiter, horizon=2.0):
     X = np.linspace(xmin, xmax, xn)
     Y = np.linspace(ymin, ymax, yn)
     C = X + Y[:, None] * 1j
+    # np.zeros_lick(a) 顾名思义这个函数的意思就是生成一个和你所给数组a相同shape的全0数组。
     N = np.zeros_like(C, dtype=int)
     Z = np.zeros_like(C)
     for n in range(maxiter):
@@ -33,19 +34,13 @@ if __name__ == '__main__':
 
     # This line will generate warnings for null values but it is faster to
     # process them afterwards using the nan_to_num
+    # nan_to_num: 使用0代替数组x中的nan元素，使用有限的数字代替inf元素
     with np.errstate(invalid='ignore'):
         M = np.nan_to_num(N + 1 -
                           np.log(np.log(abs(Z))) / np.log(2) +
                           log_horizon)
 
-    dpi = 72
-    width = 10
-    height = 10 * yn / xn
-    fig = plt.figure(figsize=(width, height), dpi=dpi)
-    ax = fig.add_axes([0.0, 0.0, 1.0, 1.0], frameon=False, aspect=1)
-
-    plt.imshow(M, extent=[xmin, xmax, ymin, ymax], interpolation="bicubic")
-    ax.set_xticks([])
-    ax.set_yticks([])
-
-    plt.show()
+    cv.namedWindow("mandlebrot", cv.WINDOW_NORMAL)
+    cv.imshow("mandlebrot", M)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
